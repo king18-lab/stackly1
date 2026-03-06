@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Stackly • navbar with home dropdown (desktop + mobile)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* ----- NAVBAR (with dropdown) ----- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid #262626;
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* logo image */
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo-img {
+      height: auto;
+      width: 120px;
+      display: block;
+    }
+
+    /* desktop navigation */
+    .nav-links {
+      display: flex;
+      gap: 0.8rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links li {
+      position: relative;
+    }
+
+    .nav-links li a, .nav-links .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: #f5f5f5;
+      font-weight: 500;
+      border-radius: 30px;
+      transition: 0.2s;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .nav-links li a i, .nav-links .dropdown-trigger i {
+      font-size: 1.3rem;
+      color: #ff7a00;
+    }
+
+    .nav-links li a:hover, .nav-links .dropdown-trigger:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .nav-links li.active > a, .nav-links li.active > .dropdown-trigger {
+      background: #ff7a00;
+      color: #000;
+    }
+    .nav-links li.active i {
+      color: #000;
+    }
+
+    /* desktop dropdown menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #1a1a1a;
+      border: 1px solid #262626;
+      border-radius: 20px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      z-index: 1001;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    .dropdown-menu a {
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-menu a i {
+      color: #ff7a00;
+      width: 24px;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu a:hover {
+      background: #333;
+      color: #ff7a00;
+    }
+
+    /* right actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-btn, .heart-btn {
+      background: transparent;
+      font-size: 1.4rem;
+      color: #f5f5f5;
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .search-btn:hover, .heart-btn:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1a1a1a;
+      padding: 0.4rem 1rem 0.4rem 0.6rem;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      border: 1px solid #262626;
+    }
+    .profile-badge img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ff7a00;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2px;
+      background: #ff7a00;
+      border-radius: 4px;
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      z-index: 2000;
+      transition: left 0.3s ease;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      border-right: 1px solid #262626;
+    }
+
+    .mobile-menu.active {
+      left: 0;
+    }
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .mobile-logo-img {
+        width: 100px;
+      height: auto;
+    }
+
+    .close-mobile {
+      font-size: 2rem;
+      cursor: pointer;
+      color: #ff7a00;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-links {
+      list-style: none;
+    }
+
+    .mobile-links li {
+      margin: 0.8rem 0;
+    }
+
+    .mobile-links li a, .mobile-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: white;
+      font-size: 1.3rem;
+      padding: 0.8rem 1rem;
+      border-radius: 40px;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .mobile-links li i {
+      color: #ff7a00;
+      width: 32px;
+      font-size: 1.5rem;
+    }
+
+    .mobile-links li a:active, .mobile-dropdown-trigger:active {
+      background: #1a1a1a;
+    }
+
+    /* mobile submenu (dropdown) */
+    .mobile-submenu {
+      display: none;
+      margin-left: 3rem;
+      margin-top: 0.5rem;
+      border-left: 2px solid #ff7a00;
+      padding-left: 1rem;
+    }
+
+    .mobile-submenu.show {
+      display: block;
+    }
+
+    .mobile-submenu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      font-size: 1.1rem;
+      color: #ddd;
+      text-decoration: none;
+    }
+
+    .mobile-submenu a i {
+      font-size: 1.2rem;
+      width: 28px;
+    }
+
+    .mobile-profile {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #262626;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .mobile-profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #ff7a00;
+    }
+
+    /* overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1500;
+      display: none;
+    }
+    .overlay.active {
+      display: block;
+    }
+
+    /* responsive */
+    @media (max-width: 860px) {
+      .nav-links, .nav-actions .search-btn, .nav-actions .heart-btn, .profile-badge {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .mobile-menu, .overlay {
+        display: none;
+      }
+    }
+
+    /* spacer */
+    .spacer {
+      height: 200vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8e8e8e;
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR with HOME DROPDOWN (desktop + mobile) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- logo image -->
+      <div class="logo">
+        <a href="404.html">
+          <img class="logo-img" src="stacklylogo (1).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- desktop menu (with dropdown) -->
+      <ul class="nav-links">
+        <!-- HOME with dropdown (desktop) -->
+        <li class="dropdown">
+          <button class="dropdown-trigger" id="desktopHomeDropdown">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="desktopHomeMenu">
+            <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+          </div>
+        </li>
+         <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="log1.html"><i class="fas fa-user"></i> Login</a></li>
+      </ul>
+
+      <!-- right icons -->
+      <div class="nav-actions">
+        <a href="4041.html" class="search-btn"><i class="fas fa-search"></i></a>
+        <a href="4041.html" class="heart-btn"><i class="fas fa-heart"></i></a>
+        <a href="4041.html" class="profile-badge">
+          <img src="stacklylogo (1).webp" alt="profile">
+          <span>Stackly</span>
+        </a>
+      </div>
+
+      <!-- hamburger -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- overlay & mobile menu -->
+  <div class="overlay" id="overlay"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-header">
+      <img class="mobile-logo-img" src="stacklylogo (1).webp" alt="Stackly">
+      <span class="close-mobile" id="closeMobile"><i class="fas fa-times"></i></span>
+    </div>
+
+    <ul class="mobile-links">
+      <!-- HOME with dropdown (mobile) -->
+      <li>
+        <button class="mobile-dropdown-trigger" id="mobileHomeTrigger">
+          <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
+        </button>
+        <div class="mobile-submenu" id="mobileHomeSubmenu">
+          <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+        </div>
+      </li>
+      <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="login.html"><i class="fas fa-user"></i> Login</a></li>
+    </ul>
+
+    
+    </div>
+  </div>
+
+  
+
+  <script>
+    (function() {
+      // ----- DESKTOP DROPDOWN -----
+      const desktopTrigger = document.getElementById('desktopHomeDropdown');
+      const desktopMenu = document.getElementById('desktopHomeMenu');
+
+      if (desktopTrigger && desktopMenu) {
+        desktopTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+        });
+
+        // close when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!desktopTrigger.contains(e.target) && !desktopMenu.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+          }
+        });
+      }
+
+      // ----- MOBILE DROPDOWN (HOME submenu) -----
+      const mobileTrigger = document.getElementById('mobileHomeTrigger');
+      const mobileSubmenu = document.getElementById('mobileHomeSubmenu');
+
+      if (mobileTrigger && mobileSubmenu) {
+        mobileTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileSubmenu.classList.toggle('show');
+          // rotate chevron (optional)
+          const chevron = this.querySelector('.fa-chevron-down');
+          if (chevron) chevron.style.transform = mobileSubmenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0)';
+        });
+      }
+
+      // ----- MOBILE MENU OPEN/CLOSE -----
+      const hamburger = document.getElementById('hamburgerBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const closeMobile = document.getElementById('closeMobile');
+      const overlay = document.getElementById('overlay');
+
+      function openMobile() {
+        mobileMenu.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        // close any open submenus when closing main menu
+        if (mobileSubmenu) mobileSubmenu.classList.remove('show');
+      }
+
+      hamburger.addEventListener('click', openMobile);
+      closeMobile.addEventListener('click', closeMobileMenu);
+      overlay.addEventListener('click', closeMobileMenu);
+
+      // close mobile menu when clicking any link (except dropdown trigger)
+      document.querySelectorAll('.mobile-links a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+
+      // escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileMenu.classList.contains('active')) closeMobileMenu();
+          if (desktopMenu) desktopMenu.classList.remove('show');
+        }
+      });
+
+      // resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 860 && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+    })();
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- ScrollReveal -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      text-align: center;
+      margin: 3rem 0 2rem;
+    }
+    .section-title span {
+      color: #ff6b2b;
+      border-bottom: 4px solid #ff6b2b;
+      padding-bottom: 5px;
+    }
+    .section-title i {
+      color: #ff6b2b;
+      margin: 0 10px;
+    }
+
+    /* ===== CONTACT FORM ===== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      background: #121212;
+      border-radius: 50px;
+      padding: 2.5rem;
+      border: 1px solid #2c2c2c;
+      margin-bottom: 4rem;
+    }
+    .contact-image {
+      border-radius: 40px;
+      overflow: hidden;
+      min-height: 400px;
+    }
+    .contact-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 40px;
+      border: 3px solid #ff6b2b;
+    }
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .form-group label {
+      color: #ff6b2b;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .form-group input, .form-group textarea {
+      background: #1a1a1a;
+      border: 2px solid #333;
+      border-radius: 30px;
+      padding: 1rem 1.5rem;
+      color: white;
+    }
+    .send-btn {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      border: none;
+      padding: 1.2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border: 2px solid white;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .send-btn:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+    }
+
+    /* ===== INDIA MAP ===== */
+    .map-section {
+      background: #121212;
+      border-radius: 50px;
+      padding: 2.5rem;
+      border: 1px solid #2c2c2c;
+      margin-bottom: 4rem;
+    }
+    .map-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .city-search {
+      background: #1a1a1a;
+      border-radius: 30px;
+      padding: 1.5rem;
+    }
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .search-box input {
+      flex: 1;
+      background: #0a0a0a;
+      border: 1px solid #333;
+      border-radius: 40px;
+      padding: 0.8rem 1.2rem;
+      color: white;
+    }
+    .search-box button {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      border: none;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .city-list {
+      list-style: none;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .city-list li {
+      padding: 0.8rem 1rem;
+      background: #0a0a0a;
+      border-radius: 30px;
+      margin-bottom: 0.3rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .city-list li:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateX(5px);
+    }
+    .city-list li.active {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      font-weight: 600;
+    }
+    .map-container {
+      background: #1a1a1a;
+      border-radius: 30px;
+      padding: 1.5rem;
+    }
+    .map-image {
+      background: #0a0a0a;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .map-image img {
+      width: 100%;
+      max-height: 350px;
+      object-fit: contain;
+    }
+    .office-info {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #0a0a0a;
+      border-radius: 20px;
+      border-left: 4px solid #ff6b2b;
+    }
+
+    /* ===== WORLD MAP WITH UAE HIGHLIGHT ===== */
+    .world-section {
+      background: #121212;
+      border-radius: 50px;
+      padding: 2.5rem;
+      border: 1px solid #2c2c2c;
+      margin-bottom: 4rem;
+    }
+    .world-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .country-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .country-item {
+      padding: 0.8rem 1rem;
+      background: #1a1a1a;
+      border-radius: 30px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .country-item:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateX(5px);
+    }
+    .country-item.active {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      font-weight: 600;
+    }
+    .uae-highlight {
+      filter: drop-shadow(0 0 15px #ff6b2b);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { filter: drop-shadow(0 0 5px #ff6b2b); }
+      50% { filter: drop-shadow(0 0 20px #ff6b2b); }
+      100% { filter: drop-shadow(0 0 5px #ff6b2b); }
+    }
+    .not-found {
+      color: #ff6b2b;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* ===== CUSTOMER CARE WITH IMAGES ===== */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    .support-card {
+      background: #121212;
+      border: 1px solid #2c2c2c;
+      border-radius: 35px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      transition: 0.3s;
+      animation: floatCard 3s infinite ease-in-out;
+    }
+    .support-card:nth-child(1) { animation-delay: 0s; }
+    .support-card:nth-child(2) { animation-delay: 0.2s; }
+    .support-card:nth-child(3) { animation-delay: 0.4s; }
+    .support-card:nth-child(4) { animation-delay: 0.6s; }
+    @keyframes floatCard {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    .support-card:hover {
+      border-color: #ff6b2b;
+      box-shadow: 0 20px 30px -10px #ff6b2b;
+    }
+    .support-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      border: 3px solid #ff6b2b;
+      overflow: hidden;
+    }
+    .support-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .support-icon {
+      font-size: 2.5rem;
+      color: #ff6b2b;
+      margin-bottom: 1rem;
+    }
+    .support-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+    .support-card p {
+      color: #aaa;
+      margin-bottom: 1rem;
+    }
+    .support-link {
+      color: #ff6b2b;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* ===== FAQ SECTION (10 ITEMS) ===== */
+    .faq-section {
+      background: #121212;
+      border-radius: 50px;
+      padding: 2.5rem;
+      border: 1px solid #2c2c2c;
+      margin: 4rem 0;
+    }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .faq-item {
+      background: #1a1a1a;
+      border-radius: 30px;
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .faq-item:hover {
+      border-color: #ff6b2b;
+      transform: translateY(-5px);
+      box-shadow: 0 15px 25px -10px #ff6b2b;
+    }
+    .faq-question {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-weight: 600;
+      color: white;
+    }
+    .faq-question i {
+      color: #ff6b2b;
+      font-size: 1.2rem;
+    }
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      color: #aaa;
+      margin-top: 0;
+      padding-left: 2.5rem;
+    }
+    .faq-item.expanded .faq-answer {
+      max-height: 150px;
+      margin-top: 1rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1000px) {
+      .contact-grid, .map-grid, .world-grid { grid-template-columns: 1fr; }
+      .support-grid { grid-template-columns: repeat(2, 1fr); }
+      .faq-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .support-grid { grid-template-columns: 1fr; }
+    }
+    [data-sr] { visibility: visible; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- CONTACT FORM -->
+    <section data-sr>
+      <h2 class="section-title"><i class="fas fa-envelope"></i> <span>get in touch</span> <i class="fas fa-envelope"></i></h2>
+      <div class="contact-grid">
+        <div class="contact-image"><img src="digital15.jpg" alt="contact"></div>
+        <div class="contact-form">
+          <div class="form-group"><label><i class="fas fa-user"></i> name (letters only)</label><input type="text" placeholder="John Doe" onkeypress="return /[A-Za-z ]/.test(String.fromCharCode(event.which))"></div>
+          <div class="form-group"><label><i class="fas fa-phone"></i> phone (10 digits)</label><input type="number" oninput="this.value=this.value.slice(0,10)" placeholder="9876543210"></div>
+          <div class="form-group"><label><i class="fas fa-envelope"></i> email</label><input type="email" placeholder="john@example.com"></div>
+          <div class="form-group"><label><i class="fas fa-pencil"></i> note</label><textarea rows="4" placeholder="Your message..."></textarea></div>
+          <a href="4041.html" class="send-btn"><i class="fas fa-paper-plane"></i> send message</a>
+        </div>
+      </div>
+    </section>
+
+    
+
+    <!-- WORLD MAP WITH UAE HIGHLIGHT -->
+    <section data-sr>
+      <h2 class="section-title"><i class="fas fa-globe"></i> <span>global presence</span> <i class="fas fa-globe"></i></h2>
+      <div class="world-section">
+        <div class="world-grid">
+          <div>
+            <div class="search-box"><input id="countrySearch" placeholder="Search country..."><button onclick="searchCountry()"><i class="fas fa-search"></i></button></div>
+            <div class="country-list" id="countryList">
+              <div class="country-item" onclick="selectCountry('USA', 'New York, 5th Avenue', this)">🇺🇸 USA</div>
+              <div class="country-item" onclick="selectCountry('UK', 'London, Oxford Street', this)">🇬🇧 UK</div>
+              <div class="country-item active" onclick="selectCountry('UAE', 'Dubai, Sheikh Zayed Road', this)">🇦🇪 UAE <span style="color:#ff6b2b; margin-left:5px;">✨ highlighted</span></div>
+              <div class="country-item" onclick="selectCountry('Singapore', 'Marina Bay', this)">🇸🇬 Singapore</div>
+              <div class="country-item" onclick="selectCountry('Canada', 'Toronto, Bay Street', this)">🇨🇦 Canada</div>
+              <div class="country-item" onclick="selectCountry('Australia', 'Sydney, George Street', this)">🇦🇺 Australia</div>
+              <div class="country-item" onclick="selectCountry('Germany', 'Berlin, Mitte', this)">🇩🇪 Germany</div>
+              <div class="country-item" onclick="selectCountry('France', 'Paris, Champs-Élysées', this)">🇫🇷 France</div>
+              <div class="country-item" onclick="selectCountry('Japan', 'Tokyo, Shibuya', this)">🇯🇵 Japan</div>
+              <div class="country-item" onclick="selectCountry('Brazil', 'São Paulo, Paulista Ave', this)">🇧🇷 Brazil</div>
+              <div class="country-item" onclick="selectCountry('South Africa', 'Johannesburg, Sandton', this)">🇿🇦 South Africa</div>
+              <div class="country-item" onclick="selectCountry('Mexico', 'Mexico City, Polanco', this)">🇲🇽 Mexico</div>
+              <div class="country-item" onclick="selectCountry('Italy', 'Rome, Via Veneto', this)">🇮🇹 Italy</div>
+              <div class="country-item" onclick="selectCountry('Spain', 'Madrid, Gran Via', this)">🇪🇸 Spain</div>
+              <div class="country-item" onclick="selectCountry('Netherlands', 'Amsterdam, Damrak', this)">🇳🇱 Netherlands</div>
+            </div>
+          </div>
+          <div class="map-container">
+            <div class="map-image">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/World_map_-_low_resolution.svg/800px-World_map_-_low_resolution.svg.png" alt="World map" style="filter: drop-shadow(0 0 10px #ff6b2b);" class="uae-highlight">
+              <!-- UAE is highlighted with glow effect -->
+            </div>
+            <div class="office-info" id="worldOfficeInfo">
+              <h4>🌍 UAE office (highlighted)</h4>
+              <p>Dubai, Sheikh Zayed Road, Financial Center</p>
+            </div>
+            <div id="notFoundMessage" style="display: none;" class="not-found">❌ country not in list</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CUSTOMER CARE WITH IMAGES -->
+    <section data-sr>
+      <h2 class="section-title"><i class="fas fa-headset"></i> <span>customer support</span> <i class="fas fa-headset"></i></h2>
+      <div class="support-grid">
+        <div class="support-card">
+          <div class="support-img"><img src="Hr.webp" alt="call"></div>
+          <h3>call us</h3>
+          <p>+91 98765 43210</p>
+          <a href="4041.html" class="support-link">call now <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="support-card">
+          <div class="support-img"><img src="hr1.webp" alt="email"></div>
+          <h3>email</h3>
+          <p>support@instype.co</p>
+          <a href="4041.html" class="support-link">send email <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="support-card">
+          <div class="support-img"><img src="hr3.webp" alt="chat"></div>
+          <h3>live chat</h3>
+          <p>24/7 instant reply</p>
+          <a href="4041.html" class="support-link">start chat <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="support-card">
+          <div class="support-img"><img src="hr6.webp" alt="help"></div>
+          <h3>help center</h3>
+          <p>FAQs & guides</p>
+          <a href="4041.html" class="support-link">get help <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 FAQS -->
+    <section data-sr>
+      <h2 class="section-title"><i class="fas fa-question-circle"></i> <span>frequently asked questions</span> <i class="fas fa-question-circle"></i></h2>
+      <div class="faq-section">
+        <div class="faq-grid">
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-video"></i> How do I create a reel?</div>
+            <div class="faq-answer">Tap the plus icon, select 'Reel', upload vertical video, add effects and music.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-chart-line"></i> How to grow followers?</div>
+            <div class="faq-answer">Post consistently, use trending hashtags, engage with your community daily.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-money-bill"></i> Can I monetize?</div>
+            <div class="faq-answer">Yes! After 10k followers, join our creator program.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-shield-alt"></i> Is my data safe?</div>
+            <div class="faq-answer">End-to-end encryption for all messages and posts.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-clock"></i> How long do stories last?</div>
+            <div class="faq-answer">24 hours, but you can save them to highlights.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-users"></i> Multiple accounts?</div>
+            <div class="faq-answer">Yes, you can add up to 5 accounts and switch easily.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-ban"></i> How to block someone?</div>
+            <div class="faq-answer">Go to profile, tap three dots, select 'Block'.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-download"></i> Download my data?</div>
+            <div class="faq-answer">Settings > privacy > download data.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-globe"></i> UAE office location?</div>
+            <div class="faq-answer">Dubai, Sheikh Zayed Road, Financial Center.</div>
+          </div>
+          <div class="faq-item" onclick="toggleFaq(this)">
+            <div class="faq-question"><i class="fas fa-headset"></i> Support timings?</div>
+            <div class="faq-answer">24/7 customer support via call, email, and chat.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // India map
+    function selectCity(city, area, el) {
+      document.querySelectorAll('.city-list li').forEach(l=>l.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('officeInfo').innerHTML = `<h4>📍 ${city} office</h4><p>${area}, ${city}</p>`;
+    }
+    function searchCity() {
+      let s=document.getElementById('citySearch').value.toLowerCase(), f=false;
+      document.querySelectorAll('.city-list li').forEach(l=>{
+        l.style.display = l.innerText.toLowerCase().includes(s)?'block':'none';
+        if(l.innerText.toLowerCase().includes(s)) f=true;
+      });
+      if(!f) alert('City not found');
+    }
+
+    // World map
+    function selectCountry(c, addr, el) {
+      document.querySelectorAll('.country-item').forEach(e=>e.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('worldOfficeInfo').innerHTML = `<h4>🌍 ${c} office</h4><p>${addr}</p>`;
+      document.getElementById('notFoundMessage').style.display='none';
+    }
+    function searchCountry() {
+      let s=document.getElementById('countrySearch').value.toLowerCase(), f=false;
+      document.querySelectorAll('.country-item').forEach(el=>{
+        if(el.innerText.toLowerCase().includes(s)) { el.style.display='block'; f=true; }
+        else el.style.display='none';
+      });
+      document.getElementById('worldOfficeInfo').style.display=f?'block':'none';
+      document.getElementById('notFoundMessage').style.display=f?'none':'block';
+    }
+
+    // FAQ toggle
+    function toggleFaq(el) {
+      el.classList.toggle('expanded');
+    }
+
+    // ScrollReveal
+    window.addEventListener('load',()=>{
+      ScrollReveal().reveal('[data-sr]',{distance:'30px',duration:800,interval:150,origin:'bottom',mobile:true});
+    });
+  </script>
+</body>
+</html>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* dummy content to show footer at bottom */
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    .content span {
+      color: #ff6b2b;
+    }
+
+    /* ===== FOOTER STYLES (INSTYPE PATTERN) ===== */
+    .footer {
+      background: #0f0f0f;
+      border-top: 3px solid #ff6b2b;
+      padding: 3rem 2rem 1.5rem;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(255,107,43,0.2);
+    }
+
+    .footer-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* stacked social pattern (top row) */
+    .footer-stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .stack-item {
+      background: #1a1a1a;
+      border: 2px solid #ff6b2b;
+      border-radius: 30px;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 20px -5px #ff6b2b;
+      transform: rotate(var(--rot, 0deg));
+      animation: float 4s infinite ease-in-out;
+    }
+
+    .stack-item:nth-child(1) { --rot: -2deg; animation-delay: 0s; }
+    .stack-item:nth-child(2) { --rot: 3deg; animation-delay: 0.5s; }
+    .stack-item:nth-child(3) { --rot: -1deg; animation-delay: 1s; }
+    .stack-item:nth-child(4) { --rot: 4deg; animation-delay: 1.5s; }
+
+    @keyframes float {
+      0% { transform: rotate(var(--rot)) translateY(0); }
+      50% { transform: rotate(var(--rot)) translateY(-8px); }
+      100% { transform: rotate(var(--rot)) translateY(0); }
+    }
+
+    .stack-item i {
+      font-size: 2rem;
+      color: #ff6b2b;
+    }
+    .stack-item span {
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    /* main footer grid */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* brand column */
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .footer-brand .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-brand .logo i {
+      font-size: 2.5rem;
+      color: #ff6b2b;
+    }
+    .footer-brand .logo h2 {
+      font-size: 1.8rem;
+      color: white;
+    }
+    .footer-brand .logo h2 span {
+      color: #ff6b2b;
+    }
+    .footer-brand p {
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 300px;
+    }
+    .social-links {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .social-links a {
+      color: #ff6b2b;
+      background: #1a1a1a;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border: 1px solid #ff6b2b;
+      transition: 0.2s;
+    }
+    .social-links a:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateY(-5px);
+    }
+
+    /* footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #ff6b2b;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col ul li {
+      margin-bottom: 0.8rem;
+    }
+    .footer-col ul li a {
+      color: #aaa;
+      text-decoration: none;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-col ul li a i {
+      color: #ff6b2b;
+      font-size: 0.8rem;
+    }
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* newsletter column */
+    .newsletter p {
+      color: #aaa;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .newsletter-form input {
+      padding: 1rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: #ff6b2b;
+    }
+    .newsletter-form button {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      border: none;
+      padding: 1rem;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .newsletter-form button:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+    }
+
+    /* footer bottom */
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid #2a2a2a;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .footer-bottom-links a {
+      color: #777;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .footer-bottom-links a:hover {
+      color: #ff6b2b;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1000px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .footer-stack {
+        gap: 1rem;
+      }
+      .stack-item {
+        padding: 0.8rem 1.2rem;
+      }
+      .stack-item i {
+        font-size: 1.5rem;
+      }
+      .stack-item span {
+        font-size: 0.9rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .footer-brand p {
+        max-width: 100%;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-bottom-links {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .footer-stack {
+        flex-direction: column;
+        align-items: center;
+      }
+      .stack-item {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* 404 links (all footer links go to 404) */
+    a {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- dummy content to show footer at bottom -->
+  <div class="content">
+    <h1>Stackly <span>social</span></h1>
+  </div>
+
+  <!-- FOOTER SECTION -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <!-- STACKED SOCIAL PATTERN (animated) -->
+      <div class="footer-stack">
+        <div class="stack-item">
+          <i class="fab fa-instagram"></i>
+          <span>@stackly_official</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-tiktok"></i>
+          <span>@stackly.reels</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-youtube"></i>
+          <span>Stackly tv</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-x-twitter"></i>
+          <span>@stackly</span>
+        </div>
+      </div>
+
+      <!-- MAIN FOOTER GRID -->
+      <div class="footer-grid">
+        <!-- brand column -->
+        <div class="footer-brand">
+          <div class="logo">
+            <i class="fas fa-camera-retro"></i>
+            <h2>Stac<span>kly</span></h2>
+          </div>
+          <p>The orange social network for creators. Share reels, connect globally, and grow your community.</p>
+          <div class="social-links">
+            <a href="4041.html"><i class="fab fa-instagram"></i></a>
+            <a href="4041.html"><i class="fab fa-tiktok"></i></a>
+            <a href="4041.html"><i class="fab fa-youtube"></i></a>
+            
+          </div>
+        </div>
+
+        <!-- quick links -->
+        <div class="footer-col">
+          <h3>Quick links</h3>
+          <ul>
+            <li><a href="home.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+           <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="log1.html"><i class="fas fa-user"></i> Login</a></li>
+      </ul>
+
+          </ul>
+        </div>
+
+        <!-- support -->
+        <div class="footer-col">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Help center</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Safety</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Community</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Privacy</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Terms</a></li>
+          </ul>
+        </div>
+
+        <!-- newsletter with proper spacing - no overlap -->
+<div class="footer-col newsletter">
+  <h3>Stay updated</h3>
+  <p>Subscribe for the latest news and orange updates.</p>
+  <div class="newsletter-form">
+    <form onsubmit="event.preventDefault(); if(this.email.value.trim() !== '') { window.location.href='4041.html'; } else { alert('Please enter your email'); }" style="display: flex; flex-direction: column; gap: 12px;">
+      <input type="email" name="email" placeholder="your email" required style="padding: 12px 16px; border-radius: 30px; border: 1px solid #ccc; width: 100%;">
+      <button type="submit" style="padding: 12px 16px; border-radius: 30px; background: #ff7a00; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;"><i class="fas fa-paper-plane"></i> subscribe</button>
+    </form>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <!-- footer bottom -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          © 2026 STACKLY. All rights reserved. Orange is our color.
+        </div>
+        <div class="footer-bottom-links">
+          <a href="4041.html">Privacy</a>
+          <a href="4041.html">Terms</a>
+          <a href="4041.html">Cookies</a>
+          <a href="4041.html">Ads</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+</body>
+</html>

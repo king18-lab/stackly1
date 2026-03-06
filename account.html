@@ -1,0 +1,1570 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Stackly • navbar with home dropdown (desktop + mobile)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* ----- NAVBAR (with dropdown) ----- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid #262626;
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* logo image */
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo-img {
+      height: auto;
+      width: 120px;
+      display: block;
+    }
+
+    /* desktop navigation */
+    .nav-links {
+      display: flex;
+      gap: 0.8rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links li {
+      position: relative;
+    }
+
+    .nav-links li a, .nav-links .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: #f5f5f5;
+      font-weight: 500;
+      border-radius: 30px;
+      transition: 0.2s;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .nav-links li a i, .nav-links .dropdown-trigger i {
+      font-size: 1.3rem;
+      color: #ff7a00;
+    }
+
+    .nav-links li a:hover, .nav-links .dropdown-trigger:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .nav-links li.active > a, .nav-links li.active > .dropdown-trigger {
+      background: #ff7a00;
+      color: #000;
+    }
+    .nav-links li.active i {
+      color: #000;
+    }
+
+    /* desktop dropdown menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #1a1a1a;
+      border: 1px solid #262626;
+      border-radius: 20px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      z-index: 1001;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    .dropdown-menu a {
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-menu a i {
+      color: #ff7a00;
+      width: 24px;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu a:hover {
+      background: #333;
+      color: #ff7a00;
+    }
+
+    /* right actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-btn, .heart-btn {
+      background: transparent;
+      font-size: 1.4rem;
+      color: #f5f5f5;
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .search-btn:hover, .heart-btn:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1a1a1a;
+      padding: 0.4rem 1rem 0.4rem 0.6rem;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      border: 1px solid #262626;
+    }
+    .profile-badge img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ff7a00;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2px;
+      background: #ff7a00;
+      border-radius: 4px;
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      z-index: 2000;
+      transition: left 0.3s ease;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      border-right: 1px solid #262626;
+    }
+
+    .mobile-menu.active {
+      left: 0;
+    }
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .mobile-logo-img {
+        width: 100px;
+      height: auto;
+    }
+
+    .close-mobile {
+      font-size: 2rem;
+      cursor: pointer;
+      color: #ff7a00;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-links {
+      list-style: none;
+    }
+
+    .mobile-links li {
+      margin: 0.8rem 0;
+    }
+
+    .mobile-links li a, .mobile-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: white;
+      font-size: 1.3rem;
+      padding: 0.8rem 1rem;
+      border-radius: 40px;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .mobile-links li i {
+      color: #ff7a00;
+      width: 32px;
+      font-size: 1.5rem;
+    }
+
+    .mobile-links li a:active, .mobile-dropdown-trigger:active {
+      background: #1a1a1a;
+    }
+
+    /* mobile submenu (dropdown) */
+    .mobile-submenu {
+      display: none;
+      margin-left: 3rem;
+      margin-top: 0.5rem;
+      border-left: 2px solid #ff7a00;
+      padding-left: 1rem;
+    }
+
+    .mobile-submenu.show {
+      display: block;
+    }
+
+    .mobile-submenu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      font-size: 1.1rem;
+      color: #ddd;
+      text-decoration: none;
+    }
+
+    .mobile-submenu a i {
+      font-size: 1.2rem;
+      width: 28px;
+    }
+
+    .mobile-profile {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #262626;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .mobile-profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #ff7a00;
+    }
+
+    /* overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1500;
+      display: none;
+    }
+    .overlay.active {
+      display: block;
+    }
+
+    /* responsive */
+    @media (max-width: 860px) {
+      .nav-links, .nav-actions .search-btn, .nav-actions .heart-btn, .profile-badge {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .mobile-menu, .overlay {
+        display: none;
+      }
+    }
+
+    /* spacer */
+    .spacer {
+      height: 200vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8e8e8e;
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR with HOME DROPDOWN (desktop + mobile) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- logo image -->
+      <div class="logo">
+        <a href="404.html">
+          <img class="logo-img" src="stacklylogo (1).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- desktop menu (with dropdown) -->
+      <ul class="nav-links">
+        <!-- HOME with dropdown (desktop) -->
+        <li class="dropdown">
+          <button class="dropdown-trigger" id="desktopHomeDropdown">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="desktopHomeMenu">
+            <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+          </div>
+        </li>
+        <li><a href="account.html"><i class="fas fa-compass"></i> Accounts</a></li>
+      <li><a href="dashboard.html"><i class="fas fa-film"></i> Dashboard</a></li>
+      <li><a href="chat.html"><i class="fas fa-shopping-bag"></i> Chats</a></li>
+      <li><a href="about.html"><i class="fas fa-heart"></i> About</a></li>
+      <li><a href="login.html"><i class="fas fa-user"></i> Login</a></li>
+      </ul>
+
+      <!-- right icons -->
+      <div class="nav-actions">
+        <a href="404.html" class="search-btn"><i class="fas fa-search"></i></a>
+        <a href="404.html" class="heart-btn"><i class="fas fa-heart"></i></a>
+        <a href="404.html" class="profile-badge">
+          <img src="stacklylogo (1).webp" alt="profile">
+          <span>Stackly</span>
+        </a>
+      </div>
+
+      <!-- hamburger -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- overlay & mobile menu -->
+  <div class="overlay" id="overlay"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-header">
+      <img class="mobile-logo-img" src="stacklylogo (1).webp" alt="Stackly">
+      <span class="close-mobile" id="closeMobile"><i class="fas fa-times"></i></span>
+    </div>
+
+    <ul class="mobile-links">
+      <!-- HOME with dropdown (mobile) -->
+      <li>
+        <button class="mobile-dropdown-trigger" id="mobileHomeTrigger">
+          <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
+        </button>
+        <div class="mobile-submenu" id="mobileHomeSubmenu">
+          <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+        </div>
+      </li>
+      <li><a href="account.html"><i class="fas fa-compass"></i> Accounts</a></li>
+      <li><a href="dashboard.html"><i class="fas fa-film"></i> Dashboard</a></li>
+      <li><a href="chat.html"><i class="fas fa-shopping-bag"></i> Chats</a></li>
+      <li><a href="about.html"><i class="fas fa-heart"></i> About</a></li>
+      <li><a href="login.html"><i class="fas fa-user"></i> Login</a></li>
+    </ul>
+
+    
+    </div>
+  </div>
+
+
+
+  <script>
+    (function() {
+      // ----- DESKTOP DROPDOWN -----
+      const desktopTrigger = document.getElementById('desktopHomeDropdown');
+      const desktopMenu = document.getElementById('desktopHomeMenu');
+
+      if (desktopTrigger && desktopMenu) {
+        desktopTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+        });
+
+        // close when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!desktopTrigger.contains(e.target) && !desktopMenu.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+          }
+        });
+      }
+
+      // ----- MOBILE DROPDOWN (HOME submenu) -----
+      const mobileTrigger = document.getElementById('mobileHomeTrigger');
+      const mobileSubmenu = document.getElementById('mobileHomeSubmenu');
+
+      if (mobileTrigger && mobileSubmenu) {
+        mobileTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileSubmenu.classList.toggle('show');
+          // rotate chevron (optional)
+          const chevron = this.querySelector('.fa-chevron-down');
+          if (chevron) chevron.style.transform = mobileSubmenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0)';
+        });
+      }
+
+      // ----- MOBILE MENU OPEN/CLOSE -----
+      const hamburger = document.getElementById('hamburgerBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const closeMobile = document.getElementById('closeMobile');
+      const overlay = document.getElementById('overlay');
+
+      function openMobile() {
+        mobileMenu.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        // close any open submenus when closing main menu
+        if (mobileSubmenu) mobileSubmenu.classList.remove('show');
+      }
+
+      hamburger.addEventListener('click', openMobile);
+      closeMobile.addEventListener('click', closeMobileMenu);
+      overlay.addEventListener('click', closeMobileMenu);
+
+      // close mobile menu when clicking any link (except dropdown trigger)
+      document.querySelectorAll('.mobile-links a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+
+      // escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileMenu.classList.contains('active')) closeMobileMenu();
+          if (desktopMenu) desktopMenu.classList.remove('show');
+        }
+      });
+
+      // resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 860 && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- ScrollReveal -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 1rem 2rem;
+    }
+
+    /* ===== HERO SECTION ===== */
+    .profile-hero {
+      width: 100%;
+      max-width: 600px;
+      margin: 2rem auto 2rem;
+      padding: 0;
+    }
+
+    .profile-card {
+      background: #121212;
+      border-radius: 32px;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      border: 1px solid #2c2c2c;
+      box-shadow: 0 25px 40px -15px rgba(255,107,43,0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .profile-pic-large {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #ff6b2b, #ffaa33);
+      padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .profile-pic-large img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid #0a0a0a;
+      object-fit: cover;
+    }
+
+    .username-row {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .username-row h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: white;
+    }
+    .username-row i {
+      color: #ff6b2b;
+      font-size: 1.3rem;
+    }
+    .follow-btn {
+      display: inline-block;
+      background: #ff6b2b;
+      color: #0a0a0a;
+      font-weight: 700;
+      padding: 0.5rem 1.8rem;
+      border-radius: 40px;
+      font-size: 1rem;
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: 0.2s;
+    }
+    .follow-btn:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 2rem;
+      margin: 0.5rem 0 0.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .stat-item {
+      text-align: center;
+      text-decoration: none;
+      color: white;
+      display: block;
+      padding: 0 0.5rem;
+    }
+    .stat-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ff6b2b;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bio {
+      font-size: 0.95rem;
+      color: #ccc;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .bio .orange {
+      color: #ff6b2b;
+      font-weight: 600;
+    }
+
+    /* section headings */
+    .section-heading {
+      margin: 2.5rem 0 1rem;
+      font-size: 1.8rem;
+      color: white;
+      text-align: center;
+    }
+    .section-heading span {
+      color: #ff6b2b;
+      border-bottom: 3px solid #ff6b2b;
+      padding-bottom: 5px;
+    }
+
+    /* ===== POSTS GRID ===== */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 600px;
+      width: 100%;
+      margin: 1rem auto 2rem;
+    }
+
+    .post-card {
+      background: #121212;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #2c2c2c;
+      transition: 0.2s ease;
+      aspect-ratio: 1/1;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-card:hover {
+      transform: scale(1.02);
+      border-color: #ff6b2b;
+    }
+
+    .post-image {
+      flex: 1;
+      background: #1f1f1f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ff6b2b;
+      font-size: 2rem;
+    }
+
+    .post-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0.2rem;
+      background: #0f0f0f;
+      font-size: 0.8rem;
+    }
+    .post-actions a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #ddd;
+      text-decoration: none;
+      padding: 0.2rem 0.5rem;
+      border-radius: 20px;
+    }
+    .post-actions a i {
+      color: #ff6b2b;
+      font-size: 1rem;
+    }
+    .post-actions a:hover {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    /* ===== REELS GRID WITH VIDEOS ===== */
+    .reels-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      max-width: 600px;
+      width: 100%;
+      margin: 1rem auto 3rem;
+    }
+
+    .reel-card {
+      background: #121212;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid #2c2c2c;
+      transition: 0.2s;
+      aspect-ratio: 9/16;
+      display: flex;
+      flex-direction: column;
+    }
+    .reel-card:hover {
+      border-color: #ff6b2b;
+      transform: translateY(-4px);
+    }
+
+    .reel-video-container {
+      flex: 1;
+      background: #1a1a1a;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reel-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    .reel-card:hover .video-overlay {
+      opacity: 1;
+    }
+    .video-overlay i {
+      font-size: 3rem;
+      color: white;
+      text-shadow: 0 0 20px #ff6b2b;
+    }
+
+    .reel-stats {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.5rem 0.2rem;
+      background: #0f0f0f;
+      font-size: 0.8rem;
+    }
+    .reel-stats a {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #ddd;
+      text-decoration: none;
+    }
+    .reel-stats a i {
+      color: #ff6b2b;
+    }
+    .reel-stats a:hover {
+      color: white;
+    }
+
+    /* desktop tweaks */
+    @media (min-width: 700px) {
+      .posts-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
+      }
+      .reels-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
+      }
+      .profile-hero {
+        max-width: 900px;
+      }
+      .profile-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 2rem 2.5rem;
+      }
+      .profile-pic-large {
+        width: 150px;
+        height: 150px;
+      }
+      .username-row {
+        justify-content: flex-start;
+      }
+      .bio {
+        text-align: left;
+      }
+    }
+
+    /* scroll reveal base */
+    [data-sr] {
+      visibility: visible;
+    }
+
+    .note-404 {
+      color: #555;
+      text-align: center;
+      margin: 2rem auto;
+      font-size: 0.8rem;
+      max-width: 500px;
+    }
+    .note-404 i {
+      color: #ff6b2b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO SECTION -->
+  <section class="profile-hero" data-sr>
+    <div class="profile-card">
+      <div class="profile-pic-large">
+        <img src="hr27.webp" alt="profile">
+      </div>
+      <div class="profile-info">
+        <div class="username-row">
+          <h1>kia._.reels</h1>
+          <i class="fas fa-check-circle"></i>
+          <a href="404.html" class="follow-btn"><i class="fas fa-plus"></i> Follow</a>
+        </div>
+
+        <div class="stats-row">
+          <a href="404.html" class="stat-item">
+            <div class="stat-number">247</div>
+            <div class="stat-label">posts</div>
+          </a>
+          <a href="404.html" class="stat-item">
+            <div class="stat-number">2.8M</div>
+            <div class="stat-label">followers</div>
+          </a>
+          <a href="404.html" class="stat-item">
+            <div class="stat-number">612</div>
+            <div class="stat-label">following</div>
+          </a>
+        </div>
+
+        <div class="bio">
+          <span class="orange">@kia._.reels</span> • creating everyday 🌆<br>
+          mumbai · contact: kia@instype.co<br>
+          <span class="orange">#reels</span> <span class="orange">#street</span> <span class="orange">#orange</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POSTS HEADING -->
+  <h2 class="section-heading" data-sr><span>📸</span> posts · 10 <span>📸</span></h2>
+
+  <!-- 10 POSTS GRID -->
+<div class="posts-grid">
+  <!-- Post 1-10 with actual images -->
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="feed3.webp" alt="Mountain landscape">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 1.2k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 84</a>
+      <a href="404.html"><i class="fas fa-share"></i> 23</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="feed4.webp" alt="Beach scene">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 3.4k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 211</a>
+      <a href="404.html"><i class="fas fa-share"></i> 67</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="feed10.webp" alt="City view">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 894</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 42</a>
+      <a href="404.html"><i class="fas fa-share"></i> 12</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="post.5.webp" alt="Forest landscape">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 2.1k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 156</a>
+      <a href="404.html"><i class="fas fa-share"></i> 44</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="post17.webp" alt="Coffee shop">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 5.6k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 432</a>
+      <a href="404.html"><i class="fas fa-share"></i> 128</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="new.webp" alt="Dog photo">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 7.2k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 621</a>
+      <a href="404.html"><i class="fas fa-share"></i> 203</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="nepal.webp" alt="Camera photo">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 4.5k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 311</a>
+      <a href="404.html"><i class="fas fa-share"></i> 96</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="pavan1.webp" alt="Pizza">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 6.8k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 524</a>
+      <a href="404.html"><i class="fas fa-share"></i> 177</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="pavan3.webp" alt="Bicycle">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 1.9k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 132</a>
+      <a href="404.html"><i class="fas fa-share"></i> 29</a>
+    </div>
+  </div>
+  
+  <div class="post-card" data-sr>
+    <div class="post-image">
+      <img src="politics1.webp" alt="Sunny day">
+    </div>
+    <div class="post-actions">
+      <a href="404.html"><i class="fas fa-heart"></i> 3.3k</a>
+      <a href="404.html"><i class="fas fa-comment"></i> 245</a>
+      <a href="404.html"><i class="fas fa-share"></i> 71</a>
+    </div>
+  </div>
+</div>
+
+  <!-- REELS HEADING -->
+  <h2 class="section-heading" data-sr><span>🎬</span> reels with video · 6 <span>🎬</span></h2>
+
+  <!-- 6 REELS GRID WITH ACTUAL VIDEOS -->
+  <div class="reels-grid">
+    <!-- Reel 1 - Abstract Orange -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="1405-147169806_medium.mp4" type="video/mp4">
+          Your browser does not support video.
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 12.4k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 843</a>
+        <a href="404.html"><i class="fas fa-share"></i> 231</a>
+      </div>
+    </div>
+
+    <!-- Reel 2 - Orange Smoke -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="4942-181472383_medium.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 8.9k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 612</a>
+        <a href="404.html"><i class="fas fa-share"></i> 145</a>
+      </div>
+    </div>
+
+    <!-- Reel 3 - City Lights -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="20857-312437286_medium (1).mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 21.3k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 1.5k</a>
+        <a href="404.html"><i class="fas fa-share"></i> 478</a>
+      </div>
+    </div>
+
+    <!-- Reel 4 - Orange Gradient -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="21844-322234054_medium.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 33.7k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 2.9k</a>
+        <a href="404.html"><i class="fas fa-share"></i> 801</a>
+      </div>
+    </div>
+
+    <!-- Reel 5 - Abstract Art -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="108420-680178323_medium.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 15.2k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 1.1k</a>
+        <a href="404.html"><i class="fas fa-share"></i> 364</a>
+      </div>
+    </div>
+
+    <!-- Reel 6 - Orange Fire -->
+    <div class="reel-card" data-sr>
+      <div class="reel-video-container">
+        <video class="reel-video" autoplay muted loop playsinline>
+          <source src="126730-736705773_medium.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+      <div class="reel-stats">
+        <a href="404.html"><i class="fas fa-heart"></i> 42.1k</a>
+        <a href="404.html"><i class="fas fa-comment"></i> 3.8k</a>
+        <a href="404.html"><i class="fas fa-share"></i> 1.2k</a>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <script>
+    // ScrollReveal initialization
+    window.addEventListener('load', function() {
+      ScrollReveal().reveal('[data-sr]', {
+        distance: '30px',
+        duration: 800,
+        easing: 'ease-out',
+        interval: 150,
+        opacity: 0,
+        origin: 'bottom',
+        reset: false,
+        mobile: true
+      });
+    });
+  </script>
+</body>
+</html>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* dummy content to show footer at bottom */
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    .content span {
+      color: #ff6b2b;
+    }
+
+    /* ===== FOOTER STYLES (INSTYPE PATTERN) ===== */
+    .footer {
+      background: #0f0f0f;
+      border-top: 3px solid #ff6b2b;
+      padding: 3rem 2rem 1.5rem;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(255,107,43,0.2);
+    }
+
+    .footer-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* stacked social pattern (top row) */
+    .footer-stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .stack-item {
+      background: #1a1a1a;
+      border: 2px solid #ff6b2b;
+      border-radius: 30px;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 20px -5px #ff6b2b;
+      transform: rotate(var(--rot, 0deg));
+      animation: float 4s infinite ease-in-out;
+    }
+
+    .stack-item:nth-child(1) { --rot: -2deg; animation-delay: 0s; }
+    .stack-item:nth-child(2) { --rot: 3deg; animation-delay: 0.5s; }
+    .stack-item:nth-child(3) { --rot: -1deg; animation-delay: 1s; }
+    .stack-item:nth-child(4) { --rot: 4deg; animation-delay: 1.5s; }
+
+    @keyframes float {
+      0% { transform: rotate(var(--rot)) translateY(0); }
+      50% { transform: rotate(var(--rot)) translateY(-8px); }
+      100% { transform: rotate(var(--rot)) translateY(0); }
+    }
+
+    .stack-item i {
+      font-size: 2rem;
+      color: #ff6b2b;
+    }
+    .stack-item span {
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    /* main footer grid */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* brand column */
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .footer-brand .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-brand .logo i {
+      font-size: 2.5rem;
+      color: #ff6b2b;
+    }
+    .footer-brand .logo h2 {
+      font-size: 1.8rem;
+      color: white;
+    }
+    .footer-brand .logo h2 span {
+      color: #ff6b2b;
+    }
+    .footer-brand p {
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 300px;
+    }
+    .social-links {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .social-links a {
+      color: #ff6b2b;
+      background: #1a1a1a;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border: 1px solid #ff6b2b;
+      transition: 0.2s;
+    }
+    .social-links a:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateY(-5px);
+    }
+
+    /* footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #ff6b2b;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col ul li {
+      margin-bottom: 0.8rem;
+    }
+    .footer-col ul li a {
+      color: #aaa;
+      text-decoration: none;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-col ul li a i {
+      color: #ff6b2b;
+      font-size: 0.8rem;
+    }
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* newsletter column */
+    .newsletter p {
+      color: #aaa;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .newsletter-form input {
+      padding: 1rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: #ff6b2b;
+    }
+    .newsletter-form button {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      border: none;
+      padding: 1rem;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .newsletter-form button:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+    }
+
+    /* footer bottom */
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid #2a2a2a;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .footer-bottom-links a {
+      color: #777;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .footer-bottom-links a:hover {
+      color: #ff6b2b;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1000px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .footer-stack {
+        gap: 1rem;
+      }
+      .stack-item {
+        padding: 0.8rem 1.2rem;
+      }
+      .stack-item i {
+        font-size: 1.5rem;
+      }
+      .stack-item span {
+        font-size: 0.9rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .footer-brand p {
+        max-width: 100%;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-bottom-links {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .footer-stack {
+        flex-direction: column;
+        align-items: center;
+      }
+      .stack-item {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* 404 links (all footer links go to 404) */
+    a {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- dummy content to show footer at bottom -->
+  <div class="content">
+    <h1>Stackly <span>social</span></h1>
+  </div>
+
+  <!-- FOOTER SECTION -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <!-- STACKED SOCIAL PATTERN (animated) -->
+      <div class="footer-stack">
+        <div class="stack-item">
+          <i class="fab fa-instagram"></i>
+          <span>@stackly_official</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-tiktok"></i>
+          <span>@stackly.reels</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-youtube"></i>
+          <span>Stackly tv</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-x-twitter"></i>
+          <span>@stackly</span>
+        </div>
+      </div>
+
+      <!-- MAIN FOOTER GRID -->
+      <div class="footer-grid">
+        <!-- brand column -->
+        <div class="footer-brand">
+          <div class="logo">
+            <i class="fas fa-camera-retro"></i>
+            <h2>Stac<span>kly</span></h2>
+          </div>
+          <p>The orange social network for creators. Share reels, connect globally, and grow your community.</p>
+          <div class="social-links">
+            <a href="404.html"><i class="fab fa-instagram"></i></a>
+            <a href="404.html"><i class="fab fa-tiktok"></i></a>
+            <a href="404.html"><i class="fab fa-youtube"></i></a>
+            
+          </div>
+        </div>
+
+        <!-- quick links -->
+        <div class="footer-col">
+          <h3>Quick links</h3>
+          <ul>
+            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+            <li><a href="account.html"><i class="fas fa-chevron-right"></i> Accounts</a></li>
+            <li><a href="dashboard.html"><i class="fas fa-chevron-right"></i> Dashboard</a></li>
+            <li><a href="chat.html"><i class="fas fa-chevron-right"></i> Chats</a></li>
+            <li><a href="about.html"><i class="fas fa-chevron-right"></i> About</a></li>
+          </ul>
+        </div>
+
+        <!-- support -->
+        <div class="footer-col">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="404.html"><i class="fas fa-chevron-right"></i> Help center</a></li>
+            <li><a href="404.html"><i class="fas fa-chevron-right"></i> Safety</a></li>
+            <li><a href="404.html"><i class="fas fa-chevron-right"></i> Community</a></li>
+            <li><a href="404.html"><i class="fas fa-chevron-right"></i> Privacy</a></li>
+            <li><a href="404.html"><i class="fas fa-chevron-right"></i> Terms</a></li>
+          </ul>
+        </div>
+
+        <!-- newsletter with proper spacing - no overlap -->
+<div class="footer-col newsletter">
+  <h3>Stay updated</h3>
+  <p>Subscribe for the latest news and orange updates.</p>
+  <div class="newsletter-form">
+    <form onsubmit="event.preventDefault(); if(this.email.value.trim() !== '') { window.location.href='404.html'; } else { alert('Please enter your email'); }" style="display: flex; flex-direction: column; gap: 12px;">
+      <input type="email" name="email" placeholder="your email" required style="padding: 12px 16px; border-radius: 30px; border: 1px solid #ccc; width: 100%;">
+      <button type="submit" style="padding: 12px 16px; border-radius: 30px; background: #ff7a00; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;"><i class="fas fa-paper-plane"></i> subscribe</button>
+    </form>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <!-- footer bottom -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          © 2026 STACKLY. All rights reserved. Orange is our color.
+        </div>
+        <div class="footer-bottom-links">
+          <a href="404.html">Privacy</a>
+          <a href="404.html">Terms</a>
+          <a href="404.html">Cookies</a>
+          <a href="404.html">Ads</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+</body>
+</html>

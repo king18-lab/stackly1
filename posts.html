@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Stackly • navbar with home dropdown (desktop + mobile)</title>
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    /* ----- NAVBAR (with dropdown) ----- */
+    .navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #000;
+      border-bottom: 1px solid #262626;
+      padding: 0.5rem 1rem;
+      z-index: 1000;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* logo image */
+    .logo a {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+    }
+    .logo-img {
+      height: auto;
+      width: 120px;
+      display: block;
+    }
+
+    /* desktop navigation */
+    .nav-links {
+      display: flex;
+      gap: 0.8rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links li {
+      position: relative;
+    }
+
+    .nav-links li a, .nav-links .dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      color: #f5f5f5;
+      font-weight: 500;
+      border-radius: 30px;
+      transition: 0.2s;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+
+    .nav-links li a i, .nav-links .dropdown-trigger i {
+      font-size: 1.3rem;
+      color: #ff7a00;
+    }
+
+    .nav-links li a:hover, .nav-links .dropdown-trigger:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .nav-links li.active > a, .nav-links li.active > .dropdown-trigger {
+      background: #ff7a00;
+      color: #000;
+    }
+    .nav-links li.active i {
+      color: #000;
+    }
+
+    /* desktop dropdown menu */
+    .dropdown-menu {
+      position: absolute;
+      top: 48px;
+      left: 0;
+      background: #1a1a1a;
+      border: 1px solid #262626;
+      border-radius: 20px;
+      padding: 0.5rem 0;
+      min-width: 200px;
+      display: none;
+      flex-direction: column;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      z-index: 1001;
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    .dropdown-menu a {
+      padding: 0.8rem 1.5rem;
+      text-decoration: none;
+      color: #f0f0f0;
+      font-size: 0.95rem;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dropdown-menu a i {
+      color: #ff7a00;
+      width: 24px;
+      font-size: 1.1rem;
+    }
+
+    .dropdown-menu a:hover {
+      background: #333;
+      color: #ff7a00;
+    }
+
+    /* right actions */
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-btn, .heart-btn {
+      background: transparent;
+      font-size: 1.4rem;
+      color: #f5f5f5;
+      padding: 0.5rem;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .search-btn:hover, .heart-btn:hover {
+      background: #1a1a1a;
+      color: #ff7a00;
+    }
+
+    .profile-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #1a1a1a;
+      padding: 0.4rem 1rem 0.4rem 0.6rem;
+      border-radius: 40px;
+      text-decoration: none;
+      color: white;
+      border: 1px solid #262626;
+    }
+    .profile-badge img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ff7a00;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 10px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2px;
+      background: #ff7a00;
+      border-radius: 4px;
+    }
+
+    /* mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      z-index: 2000;
+      transition: left 0.3s ease;
+      padding: 2rem 1.5rem;
+      overflow-y: auto;
+      border-right: 1px solid #262626;
+    }
+
+    .mobile-menu.active {
+      left: 0;
+    }
+
+    .mobile-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .mobile-logo-img {
+        width: 100px;
+      height: auto;
+    }
+
+    .close-mobile {
+      font-size: 2rem;
+      cursor: pointer;
+      color: #ff7a00;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-links {
+      list-style: none;
+    }
+
+    .mobile-links li {
+      margin: 0.8rem 0;
+    }
+
+    .mobile-links li a, .mobile-dropdown-trigger {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: white;
+      font-size: 1.3rem;
+      padding: 0.8rem 1rem;
+      border-radius: 40px;
+      background: transparent;
+      border: none;
+      width: 100%;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .mobile-links li i {
+      color: #ff7a00;
+      width: 32px;
+      font-size: 1.5rem;
+    }
+
+    .mobile-links li a:active, .mobile-dropdown-trigger:active {
+      background: #1a1a1a;
+    }
+
+    /* mobile submenu (dropdown) */
+    .mobile-submenu {
+      display: none;
+      margin-left: 3rem;
+      margin-top: 0.5rem;
+      border-left: 2px solid #ff7a00;
+      padding-left: 1rem;
+    }
+
+    .mobile-submenu.show {
+      display: block;
+    }
+
+    .mobile-submenu a {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.7rem 1rem;
+      font-size: 1.1rem;
+      color: #ddd;
+      text-decoration: none;
+    }
+
+    .mobile-submenu a i {
+      font-size: 1.2rem;
+      width: 28px;
+    }
+
+    .mobile-profile {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 1px solid #262626;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .mobile-profile img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #ff7a00;
+    }
+
+    /* overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1500;
+      display: none;
+    }
+    .overlay.active {
+      display: block;
+    }
+
+    /* responsive */
+    @media (max-width: 860px) {
+      .nav-links, .nav-actions .search-btn, .nav-actions .heart-btn, .profile-badge {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    @media (min-width: 861px) {
+      .mobile-menu, .overlay {
+        display: none;
+      }
+    }
+
+    /* spacer */
+    .spacer {
+      height: 200vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8e8e8e;
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR with HOME DROPDOWN (desktop + mobile) -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <!-- logo image -->
+      <div class="logo">
+        <a href="404.html">
+          <img class="logo-img" src="stacklylogo (1).webp" alt="Stackly">
+        </a>
+      </div>
+
+      <!-- desktop menu (with dropdown) -->
+      <ul class="nav-links">
+        <!-- HOME with dropdown (desktop) -->
+        <li class="dropdown">
+          <button class="dropdown-trigger" id="desktopHomeDropdown">
+            <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="font-size:0.8rem;"></i>
+          </button>
+          <div class="dropdown-menu" id="desktopHomeMenu">
+            <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+          </div>
+        </li>
+         <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="log1.html"><i class="fas fa-user"></i> Login</a></li>
+      </ul>
+
+      <!-- right icons -->
+      <div class="nav-actions">
+        <a href="4041.html" class="search-btn"><i class="fas fa-search"></i></a>
+        <a href="4041.html" class="heart-btn"><i class="fas fa-heart"></i></a>
+        <a href="4041.html" class="profile-badge">
+          <img src="stacklylogo (1).webp" alt="profile">
+          <span>Stackly</span>
+        </a>
+      </div>
+
+      <!-- hamburger -->
+      <div class="hamburger" id="hamburgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- overlay & mobile menu -->
+  <div class="overlay" id="overlay"></div>
+
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-header">
+      <img class="mobile-logo-img" src="stacklylogo (1).webp" alt="Stackly">
+      <span class="close-mobile" id="closeMobile"><i class="fas fa-times"></i></span>
+    </div>
+
+    <ul class="mobile-links">
+      <!-- HOME with dropdown (mobile) -->
+      <li>
+        <button class="mobile-dropdown-trigger" id="mobileHomeTrigger">
+          <i class="fas fa-home"></i> Home <i class="fas fa-chevron-down" style="margin-left:auto;"></i>
+        </button>
+        <div class="mobile-submenu" id="mobileHomeSubmenu">
+          <a href="index.html"><i class="fas fa-newspaper"></i> Home1</a>
+          <a href="home.html"><i class="fas fa-store"></i> Home2</a>
+         
+        </div>
+      </li>
+      <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="login.html"><i class="fas fa-user"></i> Login</a></li>
+    </ul>
+
+    
+    </div>
+  </div>
+
+  
+
+  <script>
+    (function() {
+      // ----- DESKTOP DROPDOWN -----
+      const desktopTrigger = document.getElementById('desktopHomeDropdown');
+      const desktopMenu = document.getElementById('desktopHomeMenu');
+
+      if (desktopTrigger && desktopMenu) {
+        desktopTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          desktopMenu.classList.toggle('show');
+        });
+
+        // close when clicking outside
+        document.addEventListener('click', function(e) {
+          if (!desktopTrigger.contains(e.target) && !desktopMenu.contains(e.target)) {
+            desktopMenu.classList.remove('show');
+          }
+        });
+      }
+
+      // ----- MOBILE DROPDOWN (HOME submenu) -----
+      const mobileTrigger = document.getElementById('mobileHomeTrigger');
+      const mobileSubmenu = document.getElementById('mobileHomeSubmenu');
+
+      if (mobileTrigger && mobileSubmenu) {
+        mobileTrigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          mobileSubmenu.classList.toggle('show');
+          // rotate chevron (optional)
+          const chevron = this.querySelector('.fa-chevron-down');
+          if (chevron) chevron.style.transform = mobileSubmenu.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0)';
+        });
+      }
+
+      // ----- MOBILE MENU OPEN/CLOSE -----
+      const hamburger = document.getElementById('hamburgerBtn');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const closeMobile = document.getElementById('closeMobile');
+      const overlay = document.getElementById('overlay');
+
+      function openMobile() {
+        mobileMenu.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileMenu() {
+        mobileMenu.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+        // close any open submenus when closing main menu
+        if (mobileSubmenu) mobileSubmenu.classList.remove('show');
+      }
+
+      hamburger.addEventListener('click', openMobile);
+      closeMobile.addEventListener('click', closeMobileMenu);
+      overlay.addEventListener('click', closeMobileMenu);
+
+      // close mobile menu when clicking any link (except dropdown trigger)
+      document.querySelectorAll('.mobile-links a').forEach(link => {
+        link.addEventListener('click', closeMobileMenu);
+      });
+
+      // escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          if (mobileMenu.classList.contains('active')) closeMobileMenu();
+          if (desktopMenu) desktopMenu.classList.remove('show');
+        }
+      });
+
+      // resize
+      window.addEventListener('resize', function() {
+        if (window.innerWidth > 860 && mobileMenu.classList.contains('active')) {
+          closeMobileMenu();
+        }
+      });
+    })();
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      overflow-x: hidden;
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    /* background video */
+    #hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      filter: brightness(0.6) contrast(1.2) saturate(1.3);
+    }
+
+    /* orange overlay gradient */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, rgba(255,107,43,0.2) 0%, rgba(10,10,10,0.7) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 900px;
+      padding: 0 1.5rem;
+      color: white;
+    }
+
+    /* ===== TITLE ANIMATION (SACKJICKS CRECK STYLE) ===== */
+    .animated-title {
+      font-size: clamp(3rem, 12vw, 6rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .title-line {
+      display: block;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .title-line span {
+      display: block;
+      animation: slideUpReveal 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+      opacity: 0;
+      transform: translateY(100%);
+    }
+
+    .title-line:nth-child(1) span { animation-delay: 0.2s; }
+    .title-line:nth-child(2) span { animation-delay: 0.4s; }
+    .title-line:nth-child(3) span { animation-delay: 0.6s; }
+
+    @keyframes slideUpReveal {
+      0% {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* orange gradient text */
+    .title-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #ff6b2b 70%, #ffaa33 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* glitch effect on hover (optional) */
+    .title-line:hover span {
+      animation: glitch 0.3s infinite;
+    }
+
+    @keyframes glitch {
+      0% { transform: skew(0deg, 0deg); }
+      20% { transform: skew(2deg, 1deg); }
+      40% { transform: skew(-2deg, -1deg); }
+      60% { transform: skew(1deg, -1deg); }
+      80% { transform: skew(-1deg, 2deg); }
+      100% { transform: skew(0deg, 0deg); }
+    }
+
+    /* description text */
+    .hero-description {
+      font-size: clamp(1rem, 3vw, 1.3rem);
+      color: #ccc;
+      max-width: 600px;
+      margin: 2rem auto 3rem;
+      line-height: 1.6;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.8s forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== 404 BUTTON ===== */
+    .btn-404 {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: #ff6b2b;
+      color: #0a0a0a;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      padding: 1.2rem 3rem;
+      border-radius: 60px;
+      text-decoration: none;
+      border: 3px solid white;
+      transition: 0.3s;
+      box-shadow: 0 10px 30px -5px #ff6b2b;
+      animation: pulse 2s infinite;
+      position: relative;
+      z-index: 10;
+      letter-spacing: 1px;
+    }
+
+    .btn-404:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+      transform: scale(1.05);
+      box-shadow: 0 20px 40px -5px #ff6b2b;
+      animation: none;
+    }
+
+    .btn-404 i {
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+
+    .btn-404:hover i {
+      transform: translateX(8px);
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(255,107,43,0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 15px rgba(255,107,43,0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(255,107,43,0);
+      }
+    }
+
+    /* floating social icons (optional but cool) */
+    .social-floating {
+      position: absolute;
+      bottom: 30px;
+      right: 30px;
+      display: flex;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .social-floating a {
+      color: white;
+      background: rgba(255,107,43,0.2);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      backdrop-filter: blur(5px);
+      border: 1px solid #ff6b2b;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .social-floating a:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateY(-5px);
+    }
+
+    /* mobile adjustments */
+    @media (max-width: 600px) {
+      .hero-content {
+        padding: 0 1rem;
+      }
+      .btn-404 {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+      }
+      .social-floating {
+        bottom: 20px;
+        right: 20px;
+      }
+      .social-floating a {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .animated-title {
+        font-size: 2.5rem;
+      }
+    }
+
+    /* small note */
+    .note {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      color: #555;
+      font-size: 0.7rem;
+      z-index: 10;
+    }
+    .note i {
+      color: #ff6b2b;
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <!-- background video (abstract orange/creative video) -->
+    <video id="hero-video" autoplay muted loop playsinline poster="">
+      <source src="8345037-uhd_2160_3840_25fps (1).mp4" type="video/mp4">
+      <!-- fallback for browsers that don't support video -->
+     
+    </video>
+
+    <!-- main content -->
+    <div class="hero-content">
+      <!-- animated title (sackjicks creck style) -->
+      <h1 class="animated-title">
+        <div class="title-line"><span class="title-gradient">STACKLY</span></div>
+        <div class="title-line"><span>CREATIVE</span></div>
+        <div class="title-line"><span>STUDIO</span></div>
+      </h1>
+
+      <!-- description -->
+      <p class="hero-description">
+        <i class="fas fa-bolt" style="color:#ff6b2b;"></i> 
+        One click away from the orange universe
+      </p>
+
+      <!-- single button linking to 404.html -->
+      <a href="4041.html" class="btn-404">
+        <span>enter the void</span>
+        <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- floating social (also link to 404) -->
+    <div class="social-floating">
+      <a href="4041.html"><i class="fab fa-instagram"></i></a>
+      <a href="4041.html"><i class="fab fa-tiktok"></i></a>
+      
+    </div>
+
+    <!-- small note -->
+    <div class="note">
+      <i class="fas fa-link"></i>
+    </div>
+  </div>
+</body>
+</html>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- ScrollReveal -->
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      color: white;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+      
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      margin-top: 60px;
+    }
+
+    /* header */
+    .threads-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding: 0 0.5rem;
+    }
+    .threads-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .threads-header h1 span {
+      color: #ff6b2b;
+    }
+    .header-icons {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .header-icons a {
+      color: #ff6b2b;
+      font-size: 1.4rem;
+      text-decoration: none;
+    }
+
+    /* feed */
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* thread card */
+    .thread-card {
+      background: #121212;
+      border: 1px solid #2c2c2c;
+      border-radius: 30px;
+      padding: 1.5rem;
+      transition: 0.2s;
+    }
+    .thread-card:hover {
+      border-color: #ff6b2b;
+      box-shadow: 0 15px 25px -10px #ff6b2b;
+    }
+
+    /* user info row */
+    .thread-user {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid #ff6b2b;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .user-details {
+      flex: 1;
+    }
+    .user-name {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .user-name i {
+      color: #ff6b2b;
+      font-size: 0.9rem;
+    }
+    .user-handle {
+      color: #aaa;
+      font-size: 0.8rem;
+    }
+    .more-options {
+      color: #ff6b2b;
+      cursor: pointer;
+    }
+
+    /* thread content */
+    .thread-content {
+      margin-bottom: 1rem;
+    }
+    .thread-text {
+      color: #eee;
+      line-height: 1.5;
+      margin-bottom: 0.8rem;
+    }
+    .thread-text .hashtag {
+      color: #ff6b2b;
+    }
+
+    /* media container (image/video) */
+    .thread-media {
+      width: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #333;
+      margin: 0.8rem 0;
+      background: #1a1a1a;
+    }
+    .thread-media img, .thread-media video {
+      width: 100%;
+      height: auto;
+      max-height: 400px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* action buttons (like, comment, share) */
+    .thread-actions {
+      display: flex;
+      justify-content: space-around;
+      padding: 0.8rem 0;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      margin: 0.8rem 0;
+    }
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #aaa;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      transition: 0.2s;
+    }
+    .action-btn i {
+      color: #ff6b2b;
+      font-size: 1.2rem;
+    }
+    .action-btn:hover {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    /* replies */
+    .thread-replies {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: #777;
+      font-size: 0.85rem;
+    }
+    .reply-avatars {
+      display: flex;
+      align-items: center;
+    }
+    .reply-avatars img {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #0a0a0a;
+      margin-right: -8px;
+    }
+    .reply-text {
+      color: #aaa;
+    }
+    .reply-text strong {
+      color: #ff6b2b;
+    }
+
+    /* responsive */
+    @media (max-width: 500px) {
+      .thread-card {
+        padding: 1.2rem;
+      }
+      .action-btn span {
+        display: none; /* hide text on very small screens */
+      }
+      .action-btn i {
+        font-size: 1.4rem;
+      }
+    }
+
+    [data-sr] {
+      visibility: visible;
+    }
+
+    .note-404 {
+      text-align: center;
+      color: #555;
+      margin-top: 3rem;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- threads style header -->
+    <div class="threads-header" data-sr>
+      <h1><span>STACKLY</span> Threads</h1>
+      <div class="header-icons">
+        <a href="4041.html"><i class="fas fa-plus-circle"></i></a>
+        <a href="4041.html"><i class="fas fa-heart"></i></a>
+        <a href="4041.html"><i class="fas fa-user"></i></a>
+      </div>
+    </div>
+
+    <!-- feed with 15 posts -->
+    <div class="feed" id="feed">
+      <!-- posts will be generated by JS -->
+    </div>
+
+    <div class="note-4041">
+      <i class="fas fa-link" style="color:#ff6b2b;"></i> 
+    </div>
+  </div>
+
+  <script>
+    // Data for 15 threads
+    const threads = [
+      {
+        name: "Patel Kapoor",
+        handle: "@priyacreations",
+        avatar: "Hr.webp",
+        verified: true,
+        text: "Just dropped my new reel! Orange vibes only 🔥 <span class='hashtag'>#reels</span> <span class='hashtag'>#instype</span>",
+        media: { type: "video", src: "4942-181472383_medium.mp4" },
+        likes: "1.2k",
+        comments: "84",
+        shares: "23",
+        replies: 3
+      },
+      {
+        name: "Arjun Reddy",
+        handle: "@arjunvisuals",
+        avatar: "hr2.webp",
+        verified: true,
+        text: "Morning shoot with the team 📸 <span class='hashtag'>#streetphotography</span>",
+        media: { type: "image", src: "Jew5.webp" },
+        likes: "3.4k",
+        comments: "211",
+        shares: "67",
+        replies: 5
+      },
+      {
+        name: "Ananya Sharma",
+        handle: "@ananyavlogs",
+        avatar: "hr3.webp",
+        verified: false,
+        text: "Behind the scenes at the orange studio 🍊 <span class='hashtag'>#bts</span>",
+        media: { type: "video", src: "10066-222361320_medium.mp4" },
+        likes: "8.9k",
+        comments: "612",
+        shares: "145",
+        replies: 8
+      },
+      {
+        name: "Vikram Rathore",
+        handle: "@vikramfilms",
+        avatar: "hr6.webp",
+        verified: true,
+        text: "New project in the works. Can't wait to share! 🎬 <span class='hashtag'>#filmmaking</span>",
+        media: { type: "image", src: "swiftcar.webp" },
+        likes: "5.6k",
+        comments: "432",
+        shares: "128",
+        replies: 12
+      },
+      {
+        name: "Neha Gupta",
+        handle: "@neha.beauty",
+        avatar: "hr11.webp",
+        verified: true,
+        text: "Orange makeup tutorial dropping tonight! <span class='hashtag'>#beauty</span>",
+        media: { type: "video", src: "21844-322234054_medium.mp4" },
+        likes: "12.4k",
+        comments: "843",
+        shares: "231",
+        replies: 15
+      },
+      {
+        name: "Rahul Mehta",
+        handle: "@rahul.music",
+        avatar: "hr12.webp",
+        verified: true,
+        text: "New beat snippet. What do you think? 🎧 <span class='hashtag'>#music</span>",
+        media: { type: "video", src: "35175-405504228_medium.mp4" },
+        likes: "7.2k",
+        comments: "621",
+        shares: "203",
+        replies: 9
+      },
+      {
+        name: "Isha Verma",
+        handle: "@isha.travels",
+        avatar: "hr13.webp",
+        verified: false,
+        text: "Sunset at the beach 🌅 <span class='hashtag'>#travel</span>",
+        media: { type: "image", src: "feed16.webp" },
+        likes: "4.5k",
+        comments: "311",
+        shares: "96",
+        replies: 4
+      },
+      {
+        name: "Karan Wahi",
+        handle: "@karancreates",
+        avatar: "hr21.webp",
+        verified: true,
+        text: "Working on something special 🎨 <span class='hashtag'>#art</span>",
+        media: { type: "video", src: "152522-803189119_medium.mp4" },
+        likes: "6.8k",
+        comments: "524",
+        shares: "177",
+        replies: 6
+      },
+      {
+        name: "Divya Nair",
+        handle: "@divyafitness",
+        avatar: "hr22.webp",
+        verified: false,
+        text: "Morning workout done! 💪 <span class='hashtag'>#fitness</span>",
+        media: { type: "image", src: "Jew4.webp" },
+        likes: "2.1k",
+        comments: "156",
+        shares: "44",
+        replies: 2
+      },
+      {
+        name: "Akash Patel",
+        handle: "@akash.tech",
+        avatar: "hr23.webp",
+        verified: true,
+        text: "New gadget unboxing 📱 <span class='hashtag'>#tech</span>",
+        media: { type: "video", src: "10066-222361320_medium.mp4" },
+        likes: "3.3k",
+        comments: "245",
+        shares: "71",
+        replies: 7
+      },
+      {
+        name: "Sneha Reddy",
+        handle: "@snehafoodie",
+        avatar: "hr24.webp",
+        verified: false,
+        text: "Sunday brunch special 🍳 <span class='hashtag'>#foodie</span>",
+        media: { type: "image", src: "Jew3.webp" },
+        likes: "5.9k",
+        comments: "432",
+        shares: "112",
+        replies: 5
+      },
+      {
+        name: "Manish Yadav",
+        handle: "@manish.photos",
+        avatar: "hr25.webp",
+        verified: true,
+        text: "Street photography from Mumbai 📷 <span class='hashtag'>#street</span>",
+        media: { type: "image", src: "digital13.webp" },
+        likes: "4.2k",
+        comments: "321",
+        shares: "89",
+        replies: 3
+      },
+      {
+        name: "Pooja Malhotra",
+        handle: "@poojafashion",
+        avatar: "hr26.webp",
+        verified: true,
+        text: "New collection launch! 👗 <span class='hashtag'>#fashion</span>",
+        media: { type: "video", src: "328167_medium (1).mp4" },
+        likes: "15.2k",
+        comments: "1.1k",
+        shares: "364",
+        replies: 18
+      },
+      {
+        name: "Rohan Khanna",
+        handle: "@rohan.gaming",
+        avatar: "hr27.webp",
+        verified: false,
+        text: "Live stream tonight at 8 PM 🎮 <span class='hashtag'>#gaming</span>",
+        media: { type: "image", src: "digital17.webp" },
+        likes: "2.8k",
+        comments: "187",
+        shares: "52",
+        replies: 4
+      },
+      {
+        name: "Tanya Joseph",
+        handle: "@tanyadance",
+        avatar: "hrwomen.webp",
+        verified: true,
+        text: "New choreography out now! 💃 <span class='hashtag'>#dance</span>",
+        media: { type: "video", src: "8345037-uhd_2160_3840_25fps (1).mp4" },
+        likes: "9.7k",
+        comments: "732",
+        shares: "298",
+        replies: 11
+      }
+    ];
+
+    // generate feed
+    const feed = document.getElementById('feed');
+    threads.forEach((thread, index) => {
+      const mediaHtml = thread.media.type === 'video' 
+        ? `<video autoplay muted loop playsinline><source src="${thread.media.src}" type="video/mp4"></video>`
+        : `<img src="${thread.media.src}" alt="post media">`;
+
+      const verifiedIcon = thread.verified ? '<i class="fas fa-check-circle"></i>' : '';
+
+      const card = document.createElement('div');
+      card.className = 'thread-card';
+      card.setAttribute('data-sr', '');
+      card.innerHTML = `
+        <div class="thread-user">
+          <a href="404.html" class="user-avatar"><img src="${thread.avatar}" alt="${thread.name}"></a>
+          <div class="user-details">
+            <div class="user-name">
+              <a href="404.html" style="color:white; text-decoration:none;">${thread.name}</a>
+              ${verifiedIcon}
+            </div>
+            <a href="404.html" class="user-handle" style="text-decoration:none;">${thread.handle}</a>
+          </div>
+          <a href="404.html" class="more-options"><i class="fas fa-ellipsis-h"></i></a>
+        </div>
+        <div class="thread-content">
+          <div class="thread-text">${thread.text}</div>
+          <div class="thread-media">
+            ${mediaHtml}
+          </div>
+        </div>
+        <div class="thread-actions">
+          <a href="404.html" class="action-btn"><i class="fas fa-heart"></i> <span>${thread.likes}</span></a>
+          <a href="404.html" class="action-btn"><i class="fas fa-comment"></i> <span>${thread.comments}</span></a>
+          <a href="404.html" class="action-btn"><i class="fas fa-retweet"></i> <span>${thread.shares}</span></a>
+          <a href="404.html" class="action-btn"><i class="fas fa-share"></i></a>
+        </div>
+        <div class="thread-replies">
+          <div class="reply-avatars">
+            <img src="https://randomuser.me/api/portraits/women/${index+10}.jpg" alt="">
+            <img src="https://randomuser.me/api/portraits/men/${index+12}.jpg" alt="">
+          </div>
+          <div class="reply-text">
+            <strong>${thread.replies} replies</strong> · 2h ago
+          </div>
+        </div>
+      `;
+      feed.appendChild(card);
+    });
+
+    // ScrollReveal
+    window.addEventListener('load', function() {
+      ScrollReveal().reveal('[data-sr]', {
+        distance: '20px',
+        duration: 600,
+        interval: 100,
+        origin: 'bottom',
+        mobile: true,
+        reset: false
+      });
+    });
+  </script>
+</body>
+</html>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* dummy content to show footer at bottom */
+    .content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    .content span {
+      color: #ff6b2b;
+    }
+
+    /* ===== FOOTER STYLES (INSTYPE PATTERN) ===== */
+    .footer {
+      background: #0f0f0f;
+      border-top: 3px solid #ff6b2b;
+      padding: 3rem 2rem 1.5rem;
+      width: 100%;
+      box-shadow: 0 -20px 40px -15px rgba(255,107,43,0.2);
+    }
+
+    .footer-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* stacked social pattern (top row) */
+    .footer-stack {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .stack-item {
+      background: #1a1a1a;
+      border: 2px solid #ff6b2b;
+      border-radius: 30px;
+      padding: 1.2rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 20px -5px #ff6b2b;
+      transform: rotate(var(--rot, 0deg));
+      animation: float 4s infinite ease-in-out;
+    }
+
+    .stack-item:nth-child(1) { --rot: -2deg; animation-delay: 0s; }
+    .stack-item:nth-child(2) { --rot: 3deg; animation-delay: 0.5s; }
+    .stack-item:nth-child(3) { --rot: -1deg; animation-delay: 1s; }
+    .stack-item:nth-child(4) { --rot: 4deg; animation-delay: 1.5s; }
+
+    @keyframes float {
+      0% { transform: rotate(var(--rot)) translateY(0); }
+      50% { transform: rotate(var(--rot)) translateY(-8px); }
+      100% { transform: rotate(var(--rot)) translateY(0); }
+    }
+
+    .stack-item i {
+      font-size: 2rem;
+      color: #ff6b2b;
+    }
+    .stack-item span {
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    /* main footer grid */
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 2.5rem;
+      margin-bottom: 3rem;
+    }
+
+    /* brand column */
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .footer-brand .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .footer-brand .logo i {
+      font-size: 2.5rem;
+      color: #ff6b2b;
+    }
+    .footer-brand .logo h2 {
+      font-size: 1.8rem;
+      color: white;
+    }
+    .footer-brand .logo h2 span {
+      color: #ff6b2b;
+    }
+    .footer-brand p {
+      color: #aaa;
+      line-height: 1.6;
+      max-width: 300px;
+    }
+    .social-links {
+      display: flex;
+      gap: 1.2rem;
+      margin-top: 0.5rem;
+    }
+    .social-links a {
+      color: #ff6b2b;
+      background: #1a1a1a;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      border: 1px solid #ff6b2b;
+      transition: 0.2s;
+    }
+    .social-links a:hover {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      transform: translateY(-5px);
+    }
+
+    /* footer columns */
+    .footer-col h3 {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    .footer-col h3::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 40px;
+      height: 3px;
+      background: #ff6b2b;
+    }
+    .footer-col ul {
+      list-style: none;
+    }
+    .footer-col ul li {
+      margin-bottom: 0.8rem;
+    }
+    .footer-col ul li a {
+      color: #aaa;
+      text-decoration: none;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-col ul li a i {
+      color: #ff6b2b;
+      font-size: 0.8rem;
+    }
+    .footer-col ul li a:hover {
+      color: white;
+      transform: translateX(5px);
+    }
+
+    /* newsletter column */
+    .newsletter p {
+      color: #aaa;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .newsletter-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    .newsletter-form input {
+      padding: 1rem 1.2rem;
+      border-radius: 50px;
+      border: 1px solid #333;
+      background: #1a1a1a;
+      color: white;
+      font-size: 0.95rem;
+    }
+    .newsletter-form input:focus {
+      outline: none;
+      border-color: #ff6b2b;
+    }
+    .newsletter-form button {
+      background: #ff6b2b;
+      color: #0a0a0a;
+      border: none;
+      padding: 1rem;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .newsletter-form button:hover {
+      background: white;
+      color: #ff6b2b;
+      border-color: #ff6b2b;
+    }
+
+    /* footer bottom */
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      padding-top: 2rem;
+      border-top: 1px solid #2a2a2a;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    .footer-bottom-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .footer-bottom-links a {
+      color: #777;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+    .footer-bottom-links a:hover {
+      color: #ff6b2b;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1000px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .footer-stack {
+        gap: 1rem;
+      }
+      .stack-item {
+        padding: 0.8rem 1.2rem;
+      }
+      .stack-item i {
+        font-size: 1.5rem;
+      }
+      .stack-item span {
+        font-size: 0.9rem;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .footer-brand p {
+        max-width: 100%;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-bottom-links {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .footer-stack {
+        flex-direction: column;
+        align-items: center;
+      }
+      .stack-item {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* 404 links (all footer links go to 404) */
+    a {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- dummy content to show footer at bottom -->
+  <div class="content">
+    <h1>Stackly <span>social</span></h1>
+  </div>
+
+  <!-- FOOTER SECTION -->
+  <footer class="footer">
+    <div class="footer-container">
+
+      <!-- STACKED SOCIAL PATTERN (animated) -->
+      <div class="footer-stack">
+        <div class="stack-item">
+          <i class="fab fa-instagram"></i>
+          <span>@stackly_official</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-tiktok"></i>
+          <span>@stackly.reels</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-youtube"></i>
+          <span>Stackly tv</span>
+        </div>
+        <div class="stack-item">
+          <i class="fab fa-x-twitter"></i>
+          <span>@stackly</span>
+        </div>
+      </div>
+
+      <!-- MAIN FOOTER GRID -->
+      <div class="footer-grid">
+        <!-- brand column -->
+        <div class="footer-brand">
+          <div class="logo">
+            <i class="fas fa-camera-retro"></i>
+            <h2>Stac<span>kly</span></h2>
+          </div>
+          <p>The orange social network for creators. Share reels, connect globally, and grow your community.</p>
+          <div class="social-links">
+            <a href="4041.html"><i class="fab fa-instagram"></i></a>
+            <a href="4041.html"><i class="fab fa-tiktok"></i></a>
+            <a href="4041.html"><i class="fab fa-youtube"></i></a>
+            
+          </div>
+        </div>
+
+        <!-- quick links -->
+        <div class="footer-col">
+          <h3>Quick links</h3>
+          <ul>
+            <li><a href="home.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+           <li><a href="posts.html"><i class="fas fa-compass"></i> Posts</a></li>
+      <li><a href="settings.html"><i class="fas fa-film"></i> Settings</a></li>
+      <li><a href="contact.html"><i class="fas fa-shopping-bag"></i> Contact</a></li>
+      <li><a href="log1.html"><i class="fas fa-user"></i> Login</a></li>
+      </ul>
+
+          </ul>
+        </div>
+
+        <!-- support -->
+        <div class="footer-col">
+          <h3>Support</h3>
+          <ul>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Help center</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Safety</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Community</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Privacy</a></li>
+            <li><a href="4041.html"><i class="fas fa-chevron-right"></i> Terms</a></li>
+          </ul>
+        </div>
+
+        <!-- newsletter with proper spacing - no overlap -->
+<div class="footer-col newsletter">
+  <h3>Stay updated</h3>
+  <p>Subscribe for the latest news and orange updates.</p>
+  <div class="newsletter-form">
+    <form onsubmit="event.preventDefault(); if(this.email.value.trim() !== '') { window.location.href='4041.html'; } else { alert('Please enter your email'); }" style="display: flex; flex-direction: column; gap: 12px;">
+      <input type="email" name="email" placeholder="your email" required style="padding: 12px 16px; border-radius: 30px; border: 1px solid #ccc; width: 100%;">
+      <button type="submit" style="padding: 12px 16px; border-radius: 30px; background: #ff7a00; color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;"><i class="fas fa-paper-plane"></i> subscribe</button>
+    </form>
+  </div>
+</div>
+        </div>
+      </div>
+
+      <!-- footer bottom -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          © 2026 STACKLY. All rights reserved. Orange is our color.
+        </div>
+        <div class="footer-bottom-links">
+          <a href="4041.html">Privacy</a>
+          <a href="4041.html">Terms</a>
+          <a href="4041.html">Cookies</a>
+          <a href="4041.html">Ads</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  
+</body>
+</html>
